@@ -9,6 +9,8 @@ Our database language is **MongoDB**.
 ### Project Structure
 
 ### Build
+To run frontend on localhost:3000 change to the frontend folder and run the following command: ``npm start``  
+To run the backend on localhost:8080 change to the backend folder and run the following command: ``go run main.go``
 
 ### Docker DB
 ```shell

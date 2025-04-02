@@ -10,6 +10,6 @@ import (
 func main() {
 	http.HandleFunc("/table", handlers.CreateTable)
 
-	fmt.Println("Server running on port 27017")
-	log.Fatal(http.ListenAndServe(":27017", nil))
+	fmt.Println("Server running on port 8080")
+	log.Fatal(http.ListenAndServe("localhost:8080", nil))
 }
