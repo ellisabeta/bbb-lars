@@ -6,6 +6,15 @@ For the backend we use **goLang**.
 Our database language is **MongoDB**.  
 ![My Skills](https://skillicons.dev/icons?i=react,typescript,go,mongodb&theme=light)
 
+### Build
+To run frontend on localhost:3000 change to the frontend folder and run the following command: ``npm start``  
+To run the backend on localhost:8080 change to the backend folder and run the following command: ``go run main.go``
+
+### Docker DB
+```shell
+  docker run --name mongodb -p 27017:27017 -d mongodb/mongodb-community-server:latest
+```
+
 ### Project Structure
 │ bbl-lars  
 │    ├── backend  
@@ -18,12 +27,3 @@ Our database language is **MongoDB**.
 │    ├── .gitignore  
 │    ├── go.mod  
 │    ├── README.md
-
-### Build
-To run frontend on localhost:3000 change to the frontend folder and run the following command: ``npm start``  
-To run the backend on localhost:8080 change to the backend folder and run the following command: ``go run main.go``
-
-### Docker DB
-```shell
-  docker run --name mongodb -p 27017:27017 -d mongodb/mongodb-community-server:latest
-```
