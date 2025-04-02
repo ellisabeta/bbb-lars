@@ -7,6 +7,17 @@ Our database language is **MongoDB**.
 ![My Skills](https://skillicons.dev/icons?i=react,typescript,go,mongodb&theme=light)
 
 ### Project Structure
+│ bbl-lars  
+│    ├── backend  
+│    │   ├── config  
+│    │   ├── database  
+│    │   ├── handlers  
+│    │   ├── models  
+│    │   ├── routes  
+│    ├── frontend  
+│    ├── .gitignore  
+│    ├── go.mod  
+│    ├── README.md
 
 ### Build
 To run frontend on localhost:3000 change to the frontend folder and run the following command: ``npm start``  

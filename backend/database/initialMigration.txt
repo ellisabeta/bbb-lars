@@ -1,0 +1,5 @@
+use bbb-db;
+
+db.createCollection("room");
+db.createCollection("table");
+db.createCollection("tableGroup");
