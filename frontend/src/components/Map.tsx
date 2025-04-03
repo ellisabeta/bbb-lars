@@ -291,14 +291,14 @@ const OfficeSpaceManagement: React.FC = () => {
                 <div className="p-4 border-t">
                     <h2 className="text-lg font-semibold mb-2">Instructions</h2>
                     <ul className="text-sm space-y-1 text-gray-700">
-                        <li>• Click "Add Desk" and then click on the canvas to place a desk</li>
-                        <li>• Drag room corners to reshape the room</li>
-                        <li>• Drag desks to reposition them</li>
-                        <li>• Click on the status indicator to toggle occupancy</li>
+                        <li>Click "Add Desk" and then click on the canvas to place a desk</li>
+                        <li>Drag room corners to reshape the room</li>
+                        <li>Drag desks to reposition them</li>
+                        <li>Click on the status indicator to toggle occupancy</li>
                     </ul>
                 </div>
             </div>
-5:14
+
  {/* Main Canvas */}
             <div className="flex-1 bg-white overflow-hidden flex flex-col">
                 <div className="p-4 border-b flex justify-between items-center">
