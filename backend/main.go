@@ -17,6 +17,9 @@ func main() {
     r.HandleFunc("/table-groups", services.GetAllTableGroups).Methods("GET")
     r.HandleFunc("/table-group", services.CreateTableGroup).Methods("POST")
 
+    r.HandleFunc("/rooms", services.GetAllRooms).Methods("GET")
+    r.HandleFunc("/room", services.CreateRoom).Methods("POST")
+
     fmt.Println("Server running on port 8080")
     log.Fatal(http.ListenAndServe(":8080", r))
 }

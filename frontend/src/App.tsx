@@ -13,6 +13,12 @@ export interface TableGroup {
     tables: Table[];
 }
 
+export interface Room {
+    id: string;
+    name: string;
+    tableGroups: TableGroup[];
+}
+
 const TableGroups: React.FC = () => {
     const [tableGroups, setTableGroups] = useState<TableGroup[]>([]);
 
