@@ -1,50 +1,28 @@
-import React, { useEffect, useState } from "react";
-import { getTableGroups } from "./services/api";
+import './App.css';
+import OfficeMapCanvas from "../src/components/Map";
 
-
-export interface Table {
-    id: string;
-    isAvailable: boolean;
-}
-
-export interface TableGroup {
-    id: string;
-    name: string;
-    tables: Table[];
-}
-
-export interface Room {
-    id: string;
-    name: string;
-    tableGroups: TableGroup[];
-}
-
-const TableGroups: React.FC = () => {
-    const [tableGroups, setTableGroups] = useState<TableGroup[]>([]);
-
-    useEffect(() => {
-        getTableGroups().then((data) => {
-            setTableGroups(data);
-        });
-    }, []);
-
+export default function App() {
     return (
         <div>
-            <h2>Table Groups</h2>
-            {tableGroups.map((group) => (
-                <div key={group.id} style={{ border: "1px solid black", padding: "10px", marginBottom: "10px" }}>
-                    <h3>{group.name}</h3>
-                    <ul>
-                        {group.tables.map((table) => (
-                            <li key={table.id}>
-                                Table ID: {table.id} - Available: {table.isAvailable ? "Yes" : "No"}
+            <div className="min-h-screen bg-gray-100">
+                <nav className="bg-blue-600 text-white p-4 shadow-md">
+                    <div className="container mx-auto flex justify-between items-center">
+                        <span className="text-xl font-bold">Berufsfachschule Baden</span>
+                        <ul className="flex space-x-6">
+                            <li>
+                                <a href="" className="hover:underline">BBB</a>
                             </li>
-                        ))}
-                    </ul>
-                </div>
-            ))}
+                            <li>
+                                <a href="" className="hover:underline">Intranet</a>
+                            </li>
+                            <li>
+                                <a href="" className="hover:underline">Arbeitsplätze</a>
+                            </li>
+                        </ul>
+                    </div>
+                </nav>
+            </div>
+            <OfficeMapCanvas/>
         </div>
-    );
+            );
 };
-
-export default TableGroups;
