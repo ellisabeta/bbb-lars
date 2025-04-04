@@ -7,8 +7,8 @@ Our database language is **MongoDB**.
 ![My Skills](https://skillicons.dev/icons?i=react,typescript,go,mongodb&theme=light)
 
 ### Build
-To run frontend on localhost:3000 change to the frontend folder and run the following command: ``npm start``  
-To run the backend on localhost:8080 change to the backend folder and run the following command: ``go run main.go``
+``npm start`` change to the frontend folder and run the command for the **frontend** on localhost:3000 r  
+``go run main.go`` change to the backend folder and run the backend on localhost:8080
 
 ### Docker DB
 ```shell
