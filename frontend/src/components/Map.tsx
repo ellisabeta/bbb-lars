@@ -127,6 +127,26 @@ const OfficeSpaceManagement: React.FC = () => {
         return floorPlan.points.map(point => `${point.x},${point.y}`).join(' ');
     };
 
+    // Set default Desk
+    useEffect(() => {
+        setDesks((currentDesks) => {
+            const hasDefaultDesk = currentDesks.some(d => d.id === 1);
+            if (!hasDefaultDesk) {
+                const defaultDesk: Desk = {
+                    id: 1,
+                    x: 400,
+                    y: 200,
+                    width: 60,
+                    height: 40,
+                    type: 'single',
+                    occupied: false
+                };
+                return [...currentDesks, defaultDesk];
+            }
+            return currentDesks;
+        });
+    }, []);
+
     // Add desk to the floor plan
     const addDesk = (x: number, y: number): void => {
         const newDesk: Desk = {
