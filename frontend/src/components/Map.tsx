@@ -1,4 +1,17 @@
 import React, { useState, useRef, useEffect } from 'react';
+import { getTableGroups,
+    createTableGroup,
+    deleteTableGroup,
+    updateTableGroup,
+    createTable,
+    getAllTables,
+    updateTable,
+    deleteTable,
+    createRoom,
+    getAllRooms,
+    updateRoom,
+    deleteRoom
+} from '../services/api';
 
 // Typdefinitionen
 interface Room {
@@ -28,16 +41,33 @@ interface Desk {
     occupied: boolean;
 }
 
+interface UpdateTablePayload {
+    positionX?: number;
+    positionY?: number;
+    occupied?: boolean;
+}
+
+// Define API interface types to match backend expectations
+interface ApiTableData {
+    id?: number;
+    roomId: number;
+    positionX: number;
+    positionY: number;
+    width: number;
+    height: number;
+    type: string; // Using string instead of DeskType to match API expectations
+    occupied: boolean;
+}
+
+interface ApiRoomData {
+    id?: number;
+    name: string;
+}
+
 type DeskType = 'single' | 'table';
 
 const OfficeSpaceManagement: React.FC = () => {
-    const [rooms, setRooms] = useState<Room[]>([
-        { id: 1, name: 'Living Room', selected: true },
-        { id: 2, name: 'Bedroom', selected: false },
-        { id: 3, name: 'Dining Room', selected: false },
-        { id: 4, name: 'Home Office', selected: false },
-    ]);
-
+    const [rooms, setRooms] = useState<Room[]>([]);
     const [floorPlan, setFloorPlan] = useState<FloorPlan>({
         points: [
             { x: 200, y: 100 },
@@ -61,6 +91,65 @@ const OfficeSpaceManagement: React.FC = () => {
 
     const canvasRef = useRef<SVGSVGElement>(null);
     const containerRef = useRef<HTMLDivElement>(null);
+
+    // Fetch rooms from API on component mount
+    useEffect(() => {
+        const fetchRooms = async () => {
+            try {
+                const roomsData = await getAllRooms();
+                // Add 'selected' property to each room if it doesn't exist in API response
+                const formattedRooms = roomsData.map((room: any, index: number) => ({
+                    ...room,
+                    selected: index === 0,
+                    tableGroups: []
+                }));
+                setRooms(formattedRooms);
+            } catch (error) {
+                console.error('Error fetching rooms:', error);
+                // Fallback to default rooms if API fails
+                setRooms([
+                    { id: 1, name: 'Living Room', selected: true },
+                    { id: 2, name: 'Bedroom', selected: false },
+                    { id: 3, name: 'Dining Room', selected: false },
+                    { id: 4, name: 'Home Office', selected: false },
+                ]);
+            }
+        };
+        fetchRooms();
+    }, []);
+
+    // Fetch tables/desks from API on component mount
+    useEffect(() => {
+        const fetchTables = async () => {
+            try {
+                const tablesData = await getAllTables();
+                // Format tables to match Desk interface
+                const formattedDesks = tablesData.map((table: any) => ({
+                    id: table.id,
+                    x: table.positionX || 400,
+                    y: table.positionY || 200,
+                    width: table.width || (table.type === 'single' ? 60 : 120),
+                    height: table.height || (table.type === 'single' ? 40 : 60),
+                    type: table.type || 'single',
+                    occupied: table.occupied || false
+                }));
+                setDesks(formattedDesks);
+            } catch (error) {
+                console.error('Error fetching tables:', error);
+                // Add default desk if API fails
+                setDesks([{
+                    id: 1,
+                    x: 400,
+                    y: 200,
+                    width: 60,
+                    height: 40,
+                    type: 'single',
+                    occupied: false
+                }]);
+            }
+        };
+        fetchTables();
+    }, []);
 
     // Mouse move handler for dragging
     useEffect(() => {
@@ -96,11 +185,34 @@ const OfficeSpaceManagement: React.FC = () => {
                     };
                     setDesks(updatedDesks);
                     setInitialDragPoint({ x: newX, y: newY });
+
+                    // Update desk position in the database when drag ends
+                    const deskToUpdate = updatedDesks[draggedItem.index];
+                    const updateData = {
+                        positionX: deskToUpdate.x,
+                        positionY: deskToUpdate.y
+                    };
+                    updateTable(deskToUpdate.id.toString(), updateData).catch(error => console.error('Error updating table position:', error));
                 }
             }
         };
 
-        const handleMouseUp = (): void => {
+        const handleMouseUp = async (): Promise<void> => {
+            if (draggedItem) {
+                if (draggedItem.type === 'desk') {
+                    // Update the desk position in the database
+                    const deskToUpdate = desks[draggedItem.index];
+                    try {
+                        const updateData = {
+                            positionX: deskToUpdate.x,
+                            positionY: deskToUpdate.y
+                        };
+                        await updateTable(deskToUpdate.id.toString(), updateData);
+                    } catch (error) {
+                        console.error('Error updating table position on drag end:', error);
+                    }
+                }
+            }
             setDraggedItem(null);
             setInitialDragPoint(null);
         };
@@ -115,11 +227,32 @@ const OfficeSpaceManagement: React.FC = () => {
     }, [draggedItem, initialDragPoint, floorPlan, desks]);
 
     // Select a room
-    const selectRoom = (id: number): void => {
-        setRooms(rooms.map(room => ({
+    const selectRoom = async (id: number): Promise<void> => {
+        const updatedRooms = rooms.map(room => ({
             ...room,
             selected: room.id === id
-        })));
+        }));
+        setRooms(updatedRooms);
+
+        try {
+            // Fetch desks/tables for the selected room
+            // If your API supports filtering tables by room ID
+            const tablesForRoom = await getAllTables();
+            if (tablesForRoom) {
+                const formattedDesks = tablesForRoom.map((table: any) => ({
+                    id: table.id,
+                    x: table.positionX || 400,
+                    y: table.positionY || 200,
+                    width: table.width || (table.type === 'single' ? 60 : 120),
+                    height: table.height || (table.type === 'single' ? 40 : 60),
+                    type: table.type || 'single',
+                    occupied: table.occupied || false
+                }));
+                setDesks(formattedDesks);
+            }
+        } catch (error) {
+            console.error('Error fetching tables for room:', error);
+        }
     };
 
     // Calculate polygon path for SVG
@@ -127,46 +260,86 @@ const OfficeSpaceManagement: React.FC = () => {
         return floorPlan.points.map(point => `${point.x},${point.y}`).join(' ');
     };
 
-    // Set default Desk
-    useEffect(() => {
-        setDesks((currentDesks) => {
-            const hasDefaultDesk = currentDesks.some(d => d.id === 1);
-            if (!hasDefaultDesk) {
-                const defaultDesk: Desk = {
-                    id: 1,
-                    x: 400,
-                    y: 200,
-                    width: 60,
-                    height: 40,
-                    type: 'single',
-                    occupied: false
-                };
-                return [...currentDesks, defaultDesk];
-            }
-            return currentDesks;
-        });
-    }, []);
-
     // Add desk to the floor plan
-    const addDesk = (x: number, y: number): void => {
-        const newDesk: Desk = {
-            id: Date.now(),
-            x: x,
-            y: y,
-            width: deskType === 'single' ? 60 : 120,
-            height: deskType === 'single' ? 40 : 60,
-            type: deskType,
-            occupied: false
-        };
-        setDesks([...desks, newDesk]);
-        setIsCreatingDesk(false);
+    const addDesk = async (x: number, y: number): Promise<void> => {
+        try {
+            // Get the currently selected room
+            const selectedRoom = rooms.find(room => room.selected);
+
+            if (!selectedRoom) {
+                console.error('No room selected');
+                return;
+            }
+
+            // Create table via API
+            const tableData: ApiTableData = {
+                roomId: selectedRoom.id,
+                positionX: x,
+                positionY: y,
+                width: deskType === 'single' ? 60 : 120,
+                height: deskType === 'single' ? 40 : 60,
+                type: deskType,
+                occupied: false
+            };
+
+            const newTableResponse = await createTable(tableData);
+
+            // Add new desk to state with the returned ID from API
+            const newDesk: Desk = {
+                id: newTableResponse.id || Date.now(),
+                x: x,
+                y: y,
+                width: deskType === 'single' ? 60 : 120,
+                height: deskType === 'single' ? 40 : 60,
+                type: deskType,
+                occupied: false
+            };
+
+            setDesks([...desks, newDesk]);
+            setIsCreatingDesk(false);
+        } catch (error) {
+            console.error('Error creating new table:', error);
+            // Fallback: add desk to local state even if API fails
+            const newDesk: Desk = {
+                id: Date.now(),
+                x: x,
+                y: y,
+                width: deskType === 'single' ? 60 : 120,
+                height: deskType === 'single' ? 40 : 60,
+                type: deskType,
+                occupied: false
+            };
+            setDesks([...desks, newDesk]);
+            setIsCreatingDesk(false);
+        }
     };
 
     // Handle desk status toggle
-    const toggleDeskStatus = (id: number): void => {
-        setDesks(desks.map(desk =>
-            desk.id === id ? { ...desk, occupied: !desk.occupied } : desk
-        ));
+    const toggleDeskStatus = async (id: number): Promise<void> => {
+        // Find the desk to update
+        const deskToUpdate = desks.find(desk => desk.id === id);
+        if (!deskToUpdate) return;
+
+        const newOccupiedStatus = !deskToUpdate.occupied;
+
+        try {
+            // Update table in API
+            const updateData = {
+                occupied: newOccupiedStatus
+            };
+            await updateTable(id.toString(), updateData);
+
+            // Update local state
+            setDesks(desks.map(desk =>
+                desk.id === id ? { ...desk, occupied: newOccupiedStatus } : desk
+            ));
+        } catch (error) {
+            console.error('Error updating table occupied status:', error);
+            // Update local state even if API fails
+            setDesks(desks.map(desk =>
+                desk.id === id ? { ...desk, occupied: newOccupiedStatus } : desk
+            ));
+        }
     };
 
     // Handle canvas click to place desk
@@ -233,14 +406,51 @@ const OfficeSpaceManagement: React.FC = () => {
     };
 
     // Remove a room from the sidebar
-    const removeRoom = (id: number): void => {
-        setRooms(rooms.filter(room => room.id !== id));
+    const removeRoom = async (id: number): Promise<void> => {
+        try {
+            // Delete room via API
+            await deleteRoom(id.toString());
+
+            // Update local state
+            setRooms(rooms.filter(room => room.id !== id));
+
+            // If the deleted room was selected, select another room
+            const wasSelected = rooms.find(room => room.id === id)?.selected;
+            if (wasSelected && rooms.length > 1) {
+                const remainingRooms = rooms.filter(room => room.id !== id);
+                selectRoom(remainingRooms[0].id);
+            }
+        } catch (error) {
+            console.error('Error deleting room:', error);
+            // Update local state even if API fails
+            setRooms(rooms.filter(room => room.id !== id));
+        }
     };
 
     // Add a new room to the sidebar
-    const addRoom = (): void => {
-        const newRoomId = Math.max(...rooms.map(r => r.id)) + 1;
-        setRooms([...rooms, { id: newRoomId, name: 'New Room', selected: false }]);
+    const addRoom = async (): Promise<void> => {
+        try {
+            // Create room via API
+            const newRoomData: ApiRoomData = {
+                name: 'New Room'
+            };
+
+            const newRoomResponse = await createRoom(newRoomData);
+
+            // Add new room to state with the returned ID from API
+            const newRoom: Room = {
+                id: newRoomResponse.id || Math.max(...rooms.map(r => r.id)) + 1,
+                name: 'New Room',
+                selected: false
+            };
+
+            setRooms([...rooms, newRoom]);
+        } catch (error) {
+            console.error('Error creating new room:', error);
+            // Fallback: add room to local state even if API fails
+            const newRoomId = Math.max(...rooms.map(r => r.id)) + 1;
+            setRooms([...rooms, { id: newRoomId, name: 'New Room', selected: false }]);
+        }
     };
 
     // Calculate length between two points
