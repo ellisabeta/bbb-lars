@@ -67,12 +67,10 @@ const ViewMap: React.FC = () => {
     );
   };
 
-  // Calculate polygon path for SVG
   const getPolygonPoints = (): string => {
     return floorPlan.points.map((point) => `${point.x},${point.y}`).join(" ");
   };
 
-  // Set default Desk
   useEffect(() => {
     setDesks((currentDesks) => {
       const hasDefaultDesk = currentDesks.some((d) => d.id === 1);
@@ -92,7 +90,6 @@ const ViewMap: React.FC = () => {
     });
   }, []);
 
-  // Handle desk status toggle
   const toggleDeskStatus = (id: number): void => {
     setDesks(
       desks.map((desk) =>
@@ -101,20 +98,9 @@ const ViewMap: React.FC = () => {
     );
   };
 
-
   // Update zoom level
   const handleZoom = (newZoom: number): void => {
     setZoom(newZoom);
-  };
-  
-
-  
-
-  // Calculate angle between two points (in degrees)
-  const calculateAngle = (p1: Point, p2: Point): number => {
-    const dx = p2.x - p1.x;
-    const dy = p2.y - p1.y;
-    return (Math.atan2(dy, dx) * 180) / Math.PI;
   };
 
   return (
@@ -162,9 +148,8 @@ const ViewMap: React.FC = () => {
                 stroke="black"
                 strokeWidth="2"
               />
-
               {desks.map((desk, index) => (
-                <g key={desk.id} style={{ cursor: "move" }}>
+                <g key={desk.id}>
                   <rect
                     x={desk.x}
                     y={desk.y}
@@ -179,6 +164,7 @@ const ViewMap: React.FC = () => {
                     cy={desk.y + 10}
                     r={6}
                     fill={desk.occupied ? "red" : "green"}
+                    cursor= "pointer"
                     stroke="black"
                     strokeWidth="1"
                     onClick={(e: React.MouseEvent) => {
@@ -205,7 +191,6 @@ const ViewMap: React.FC = () => {
             </svg>
           </div>
         </div>
-
         <div className="p-4 border-t bg-gray-100">
           <div className="flex justify-between">
             <div>
