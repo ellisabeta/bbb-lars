@@ -1,6 +1,7 @@
 import './App.css';
 import OfficeMapCanvas from "./components/Map";
 import React from "react";
+import ViewMap from './components/ViewMap';
 
 export default function App() {
     return (
@@ -20,6 +21,7 @@ export default function App() {
             </div>
             <Overview/>
             <OfficeMapCanvas/>
+            <ViewMap />
         </nav>
     );
 };
