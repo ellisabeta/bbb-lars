@@ -1,6 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
 
-// Typdefinitionen
 interface Room {
   id: number;
   name: string;
@@ -51,7 +50,6 @@ const ViewMap: React.FC = () => {
 
   const [desks, setDesks] = useState<Desk[]>([]);
   const [deskType, setDeskType] = useState<DeskType>("single");
-  const [isCreatingDesk, setIsCreatingDesk] = useState<boolean>(false);
   const [zoom, setZoom] = useState<number>(100);
 
   const canvasRef = useRef<SVGSVGElement>(null);
@@ -133,7 +131,6 @@ const ViewMap: React.FC = () => {
             style={{
               transform: `scale(${zoom / 100})`,
               transformOrigin: "0 0",
-              cursor: isCreatingDesk ? "crosshair" : "default",
             }}
           >
             <svg
