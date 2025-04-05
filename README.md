@@ -8,7 +8,9 @@ Our database language is **MongoDB**.
 
 ### Build
 ``npm start`` change to the frontend folder and run the command for the **frontend** on localhost:3000 r  
-``go run main.go`` change to the backend folder and run the backend on localhost:8080
+``go run main.go`` change to the backend folder and run the backend on localhost:8080  
+To build the backend:   
+``go mod init bbb-lars``, ``go mod tidy``, ``go run .``
 
 ### Docker DB
 ```shell
