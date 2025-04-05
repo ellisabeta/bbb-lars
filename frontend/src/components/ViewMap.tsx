@@ -102,7 +102,7 @@ const ViewMap: React.FC = () => {
   };
 
   return (
-    <div className="flex h-screen w-full">
+    <div className="flex h-150% w-full">
       <div className="flex-1 bg-white overflow-hidden flex flex-col">
         <div className="p-4 border-b flex justify-between items-center">
           <h1 className="text-xl font-bold">Office Space Planner</h1>
