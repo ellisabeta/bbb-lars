@@ -1,11 +1,4 @@
 import React, { useState, useRef, useEffect } from "react";
-
-interface Room {
-  id: number;
-  name: string;
-  selected: boolean;
-}
-
 interface Point {
   x: number;
   y: number;
@@ -26,18 +19,8 @@ interface Desk {
   type: "single" | "table";
   occupied: boolean;
 }
-
-type DeskType = "single" | "table";
-
 const ViewMap: React.FC = () => {
-  const [rooms, setRooms] = useState<Room[]>([
-    { id: 1, name: "Living Room", selected: true },
-    { id: 2, name: "Bedroom", selected: false },
-    { id: 3, name: "Dining Room", selected: false },
-    { id: 4, name: "Home Office", selected: false },
-  ]);
-
-  const [floorPlan, setFloorPlan] = useState<FloorPlan>({
+  const [floorPlan] = useState<FloorPlan>({
     points: [
       { x: 200, y: 100 },
       { x: 650, y: 100 },
@@ -49,20 +32,10 @@ const ViewMap: React.FC = () => {
   });
 
   const [desks, setDesks] = useState<Desk[]>([]);
-  const [deskType, setDeskType] = useState<DeskType>("single");
   const [zoom, setZoom] = useState<number>(100);
 
   const canvasRef = useRef<SVGSVGElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
-
-  const selectRoom = (id: number): void => {
-    setRooms(
-      rooms.map((room) => ({
-        ...room,
-        selected: room.id === id,
-      }))
-    );
-  };
 
   const getPolygonPoints = (): string => {
     return floorPlan.points.map((point) => `${point.x},${point.y}`).join(" ");
@@ -143,7 +116,7 @@ const ViewMap: React.FC = () => {
                 stroke="black"
                 strokeWidth="2"
               />
-              {desks.map((desk, index) => (
+              {desks.map((desk) => (
                 <g key={desk.id}>
                   <rect
                     x={desk.x}
@@ -180,7 +153,7 @@ const ViewMap: React.FC = () => {
                 </g>
               ))}
 
-              {floorPlan.points.map((point, index) => (
+              {floorPlan.points.map((_point, index) => (
                 <circle key={`vertex-${index}`} opacity={0.7} cursor="move" />
               ))}
             </svg>

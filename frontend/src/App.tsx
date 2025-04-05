@@ -24,7 +24,7 @@ export default function App() {
         </button>
       </div>
       <Overview />
-      {adminPW == "test" ? <OfficeMapCanvas /> : <ViewMap />}
+      {adminPW === "test" ? <OfficeMapCanvas /> : <ViewMap />}
     </nav>
   );
 }

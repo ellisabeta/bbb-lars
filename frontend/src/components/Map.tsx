@@ -220,11 +220,6 @@ const OfficeSpaceManagement: React.FC = () => {
         setRooms(rooms.filter(room => room.id !== id));
     };
 
-    const addRoom = (): void => {
-        const newRoomId = Math.max(...rooms.map(r => r.id)) + 1;
-        setRooms([...rooms, { id: newRoomId, name: 'New Room', selected: false }]);
-    };
-
     const calculateLength = (p1: Point, p2: Point): number => {
         const dx = p2.x - p1.x;
         const dy = p2.y - p1.y;
@@ -376,7 +371,7 @@ const OfficeSpaceManagement: React.FC = () => {
                             })}
 
                             {/* Desks */}
-                            {desks.map((desk, index) => (
+                            {desks.map((desk) => (
                                 <g
                                     key={desk.id}
                                     onClick={(e: React.MouseEvent) => handleDeskClick(e, desk)}
