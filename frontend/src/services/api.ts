@@ -44,7 +44,7 @@ export const createTableGroup = async (group: TableGroup) => {
 export const deleteTableGroup = async (id: string) => {
     try {
         const response = await axios.delete(`${API_URL}/table-groups/${id}`);
-        return response.data; // Gibt die Antwort nach erfolgreichem Löschen zurück
+        return response.data;
     } catch (error) {
         console.error("Error deleting table group:", error);
         throw new Error('Failed to delete table group');
@@ -54,7 +54,7 @@ export const deleteTableGroup = async (id: string) => {
 export const updateTableGroup = async (id: string, updatedGroup: TableGroup) => {
     try {
         const response = await axios.put(`${API_URL}/table-groups/${id}`, updatedGroup);
-        return response.data; // Gibt die Antwort nach erfolgreichem Update zurück
+        return response.data;
     } catch (error) {
         console.error("Error updating table group:", error);
         throw new Error('Failed to update table group');
@@ -64,7 +64,7 @@ export const updateTableGroup = async (id: string, updatedGroup: TableGroup) => 
 export const createTable = async (newTable: Table) => {
     try {
         const response = await axios.post(`${API_URL}/tables`, newTable);
-        return response.data; // Gibt die Antwort nach erfolgreichem Erstellen zurück
+        return response.data;
     } catch (error) {
         console.error("Error creating table:", error);
         throw new Error('Failed to create table');
@@ -74,7 +74,7 @@ export const createTable = async (newTable: Table) => {
 export const getAllTables = async () => {
     try {
         const response = await axios.get(`${API_URL}/tables`);
-        return response.data; // Gibt alle Tabellen zurück
+        return response.data;
     } catch (error) {
         console.error("Error fetching tables:", error);
         return [];
@@ -84,7 +84,7 @@ export const getAllTables = async () => {
 export const updateTable = async (id: string, updatedTable: Table) => {
     try {
         const response = await axios.put(`${API_URL}/tables/${id}`, updatedTable);
-        return response.data; // Gibt die Antwort nach erfolgreichem Update zurück
+        return response.data;
     } catch (error) {
         console.error("Error updating table:", error);
         throw new Error('Failed to update table');
@@ -94,7 +94,7 @@ export const updateTable = async (id: string, updatedTable: Table) => {
 export const deleteTable = async (id: string) => {
     try {
         const response = await axios.delete(`${API_URL}/tables/${id}`);
-        return response.data; // Gibt die Antwort nach erfolgreichem Löschen zurück
+        return response.data;
     } catch (error) {
         console.error("Error deleting table:", error);
         throw new Error('Failed to delete table');
@@ -106,7 +106,7 @@ export const deleteTable = async (id: string) => {
 export const createRoom = async (newRoom: Room) => {
     try {
         const response = await axios.post(`${API_URL}/rooms`, newRoom);
-        return response.data; // Gibt die Antwort nach erfolgreichem Erstellen zurück
+        return response.data;
     } catch (error) {
         console.error("Error creating room:", error);
         throw new Error('Failed to create room');
@@ -116,7 +116,7 @@ export const createRoom = async (newRoom: Room) => {
 export const getAllRooms = async () => {
     try {
         const response = await axios.get(`${API_URL}/rooms`);
-        return response.data; // Gibt alle Räume zurück
+        return response.data;
     } catch (error) {
         console.error("Error fetching rooms:", error);
         return [];
@@ -126,7 +126,7 @@ export const getAllRooms = async () => {
 export const updateRoom = async (id: string, updatedRoom: Room) => {
     try {
         const response = await axios.put(`${API_URL}/rooms/${id}`, updatedRoom);
-        return response.data; // Gibt die Antwort nach erfolgreichem Update zurück
+        return response.data;
     } catch (error) {
         console.error("Error updating room:", error);
         throw new Error('Failed to update room');

@@ -55,7 +55,6 @@ const ViewMap: React.FC = () => {
   const canvasRef = useRef<SVGSVGElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
 
-  // Select a room
   const selectRoom = (id: number): void => {
     setRooms(
       rooms.map((room) => ({
@@ -96,7 +95,6 @@ const ViewMap: React.FC = () => {
     );
   };
 
-  // Update zoom level
   const handleZoom = (newZoom: number): void => {
     setZoom(newZoom);
   };

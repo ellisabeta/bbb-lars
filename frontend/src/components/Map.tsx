@@ -1,6 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
 
-// Typdefinitionen
 interface Room {
     id: number;
     name: string;
@@ -55,14 +54,12 @@ const OfficeSpaceManagement: React.FC = () => {
     const [isCreatingDesk, setIsCreatingDesk] = useState<boolean>(false);
     const [zoom, setZoom] = useState<number>(100);
 
-    // Drag state
     const [draggedItem, setDraggedItem] = useState<{ type: 'vertex' | 'desk', index: number } | null>(null);
     const [initialDragPoint, setInitialDragPoint] = useState<Point | null>(null);
 
     const canvasRef = useRef<SVGSVGElement>(null);
     const containerRef = useRef<HTMLDivElement>(null);
 
-    // Mouse move handler for dragging
     useEffect(() => {
         const handleMouseMove = (e: MouseEvent): void => {
             if (draggedItem && initialDragPoint && canvasRef.current) {
@@ -74,7 +71,6 @@ const OfficeSpaceManagement: React.FC = () => {
                 const deltaY = newY - initialDragPoint.y;
 
                 if (draggedItem.type === 'vertex') {
-                    // Update vertex position
                     const newPoints = [...floorPlan.points];
                     newPoints[draggedItem.index] = {
                         x: newX,
@@ -86,7 +82,6 @@ const OfficeSpaceManagement: React.FC = () => {
                     });
                     setInitialDragPoint({ x: newX, y: newY });
                 } else if (draggedItem.type === 'desk') {
-                    // Update desk position
                     const updatedDesks = [...desks];
                     const desk = updatedDesks[draggedItem.index];
                     updatedDesks[draggedItem.index] = {
@@ -114,7 +109,6 @@ const OfficeSpaceManagement: React.FC = () => {
         };
     }, [draggedItem, initialDragPoint, floorPlan, desks]);
 
-    // Select a room
     const selectRoom = (id: number): void => {
         setRooms(rooms.map(room => ({
             ...room,
@@ -122,12 +116,10 @@ const OfficeSpaceManagement: React.FC = () => {
         })));
     };
 
-    // Calculate polygon path for SVG
     const getPolygonPoints = (): string => {
         return floorPlan.points.map(point => `${point.x},${point.y}`).join(' ');
     };
 
-    // Set default Desk
     useEffect(() => {
         setDesks((currentDesks) => {
             const hasDefaultDesk = currentDesks.some(d => d.id === 1);
@@ -147,7 +139,6 @@ const OfficeSpaceManagement: React.FC = () => {
         });
     }, []);
 
-    // Add desk to the floor plan
     const addDesk = (x: number, y: number): void => {
         const newDesk: Desk = {
             id: Date.now(),
@@ -162,14 +153,12 @@ const OfficeSpaceManagement: React.FC = () => {
         setIsCreatingDesk(false);
     };
 
-    // Handle desk status toggle
     const toggleDeskStatus = (id: number): void => {
         setDesks(desks.map(desk =>
             desk.id === id ? { ...desk, occupied: !desk.occupied } : desk
         ));
     };
 
-    // Handle canvas click to place desk
     const handleCanvasClick = (e: React.MouseEvent<SVGSVGElement>): void => {
         if (isCreatingDesk && canvasRef.current) {
             const rect = canvasRef.current.getBoundingClientRect();
@@ -181,7 +170,6 @@ const OfficeSpaceManagement: React.FC = () => {
         }
     };
 
-    // Start dragging a vertex
     const startVertexDrag = (e: React.MouseEvent, index: number): void => {
         e.stopPropagation();
         if (canvasRef.current) {
@@ -194,7 +182,6 @@ const OfficeSpaceManagement: React.FC = () => {
         }
     };
 
-    // Start dragging a desk
     const startDeskDrag = (e: React.MouseEvent, desk: Desk): void => {
         e.stopPropagation();
         const deskIndex = desks.findIndex(d => d.id === desk.id);
@@ -209,18 +196,15 @@ const OfficeSpaceManagement: React.FC = () => {
         }
     };
 
-    // Select desk when clicked
     const handleDeskClick = (e: React.MouseEvent, desk: Desk): void => {
         e.stopPropagation();
         setSelectedDesk(desk.id);
     };
 
-    // Update zoom level
     const handleZoom = (newZoom: number): void => {
         setZoom(newZoom);
     };
 
-    // Add a vertex to floor plan
     const addVertex = (): void => {
         if (floorPlan.points.length < 8) {
             const lastPoint = floorPlan.points[floorPlan.points.length - 1];
@@ -232,25 +216,21 @@ const OfficeSpaceManagement: React.FC = () => {
         }
     };
 
-    // Remove a room from the sidebar
     const removeRoom = (id: number): void => {
         setRooms(rooms.filter(room => room.id !== id));
     };
 
-    // Add a new room to the sidebar
     const addRoom = (): void => {
         const newRoomId = Math.max(...rooms.map(r => r.id)) + 1;
         setRooms([...rooms, { id: newRoomId, name: 'New Room', selected: false }]);
     };
 
-    // Calculate length between two points
     const calculateLength = (p1: Point, p2: Point): number => {
         const dx = p2.x - p1.x;
         const dy = p2.y - p1.y;
         return Math.sqrt(dx * dx + dy * dy);
     };
 
-    // Calculate angle between two points (in degrees)
     const calculateAngle = (p1: Point, p2: Point): number => {
         const dx = p2.x - p1.x;
         const dy = p2.y - p1.y;
@@ -318,8 +298,7 @@ const OfficeSpaceManagement: React.FC = () => {
                     </ul>
                 </div>
             </div>
-
- {/* Main Canvas */}
+        {/* Main Canvas */}
             <div className="flex-1 bg-white overflow-hidden flex flex-col">
                 <div className="p-4 border-b flex justify-between items-center">
                     <h1 className="text-xl font-bold">Office Space Planner</h1>
