@@ -8,7 +8,7 @@ import (
 )
 
 func ConnectToMongoDB() (*mongo.Client, error) {
-	uri := "localhost:27017"
+	uri := "mongodb://localhost:27017"
 	if uri == "" {
 		return nil, fmt.Errorf("MONGODB_URI is not set")
 	}
