@@ -81,7 +81,7 @@ export const getAllTables = async () => {
     }
 };
 
-export const updateTable = async (id: string, updatedTable: Partial<Table>) => {
+export const updateTable = async (id: string, updatedTable: Table) => {
     try {
         const response = await axios.put(`${API_URL}/tables/${id}`, updatedTable);
         return response.data; // Gibt die Antwort nach erfolgreichem Update zurück
