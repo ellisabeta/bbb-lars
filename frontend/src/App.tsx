@@ -4,7 +4,7 @@ import React from "react";
 
 export default function App() {
     return (
-        <nav className="bg-white shadow-md p-4">
+        <nav className="bg-gray-100 shadow-md p-4">
             <div className="container mx-auto flex justify-between items-center">
                 <div className="text-3xl font-bold text-black">BBB Berufsfachschule</div>
                 <ul className="hidden md:flex space-x-6">
